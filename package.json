@@ -2,10 +2,10 @@
 , "description": "C markdown implementation using discount"
 , "tags": ["markdown", "md", "parser", "native"]
 , "author" : "TJ Holowaychuk <tj@vision-media.ca>"
-, "version": "0.2.3"
+, "version": "0.2.4"
 , "lib": "./build/Release"
 , "main": "./build/Release/markdown"
-, "scripts": { "preinstall": "node-waf configure build" }
+, "scripts": { "preinstall": "node-gyp configure build" }
 , "repository" : { "type" : "git"
                  , "url" : "http://github.com/visionmedia/node-discount.git"
                  }

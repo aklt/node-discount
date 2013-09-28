@@ -1,7 +1,7 @@
 
-// 
+//
 // markdown.cc
-// 
+//
 // (c) 2009 TJ Holowaychuk <tj@vision-media.ca> (MIT Licensed)
 //
 
@@ -24,17 +24,16 @@ static Handle<Value>
 Parse(const Arguments& args) {
   HandleScope scope;
   char *buf;
-  int len;
   int flags;
   if (args.Length() < 1 || !args[0]->IsString())
     return ThrowException(Exception::TypeError(String::New("String expected")));
-  
+
   if (args.Length() == 2){
     if (!args[1]->IsNumber()){
       return ThrowException(Exception::TypeError(String::New("Flag should be a number")));
     }else{
       flags = args[1]->Int32Value();
-    } 
+    }
   } else {
     flags = 0;
   }
@@ -44,7 +43,7 @@ Parse(const Arguments& args) {
   if ((doc = mkd_string(*in, in.length(), flags)) == 0)
     return ThrowException(Exception::Error(String::New("Failed to parse markdown")));
   if (mkd_compile(doc, flags))
-    len = mkd_document(doc, &buf);
+    mkd_document(doc, &buf);
   Handle<String> md = String::New(buf);
   mkd_cleanup(doc);
   return scope.Close(md);
@@ -54,8 +53,7 @@ Parse(const Arguments& args) {
  * Initialize.
  */
 
-extern "C" void
-init (Handle<Object> target) {
+void Init (Handle<Object> target) {
   HandleScope scope;
   Handle<Object> flags;
   flags = Object::New();
@@ -83,5 +81,8 @@ init (Handle<Object> target) {
   flags->Set(String::New("extraFootnote"), Number::New(MKD_EXTRA_FOOTNOTE));
   target->Set(String::New("version"), String::New("0.2.0"));
   target->Set(String::New("flags"), flags);
-  NODE_SET_METHOD(target, "parse", Parse);
+  target->Set(String::New("parse"), FunctionTemplate::New(Parse)->GetFunction());
 }
+
+NODE_MODULE(discount, ::Init);
+
